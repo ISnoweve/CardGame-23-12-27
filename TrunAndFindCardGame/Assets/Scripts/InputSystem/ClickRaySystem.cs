@@ -1,18 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(ClickDetectSystem))]
-public class ClickRaySystem : MonoBehaviour
+public class InputSystem : MonoBehaviour
 {
-    [SerializeField] private ClickDetectSystem _clickDetectSystem;
+    private ClickDetectSystem _clickDetectSystem;
     private RaycastHit2D hitObject;
 
-    //Test debug
-    [Space(10)][Header("EditorTest")]
-    public bool debugCall;
+    [SerializeField] private SOCardGameRuleWorkingEvent gameRuleWorkingEvent;
+
+    [SerializeField] private bool canClickInput = true;
 
     private void Awake()
     {
@@ -21,13 +19,11 @@ public class ClickRaySystem : MonoBehaviour
 
     private void Update()
     {
+
+        if(!canClickInput)return;
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (debugCall)
-            {
-                Debug.Log("LeftClick is working");
-            }
-
             Vector3 mouseClickPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f);
             Vector3 mouseClickWorldPoint = Camera.main.ScreenToWorldPoint(mouseClickPosition);
 
@@ -37,5 +33,20 @@ public class ClickRaySystem : MonoBehaviour
                 _clickDetectSystem.Detect(hitObject);
             }
         }
+    }
+
+    private void DetectClickInput()
+    {
+        canClickInput = !canClickInput;
+    }
+
+    private void OnEnable()
+    {
+        gameRuleWorkingEvent.action += DetectClickInput;
+    }
+
+    private void OnDisable()
+    {
+        gameRuleWorkingEvent.action -= DetectClickInput;
     }
 }
