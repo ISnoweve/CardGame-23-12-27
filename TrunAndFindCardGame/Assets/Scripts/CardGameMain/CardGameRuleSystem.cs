@@ -10,13 +10,20 @@ public class CardGameRuleSystem : MonoBehaviour
     [SerializeField]private SOClickEvent clickEvent;
     [SerializeField]private SOCardGameRuleWorkingEvent gameRuleWorkingEvent;
 
-    [Header("Reference")][Space(10)]
+    [Space(10)][Header("Reference")]
     private CardRecordSyStem _cardRecordSyStem;
     [SerializeField] private Transform collectionPlace;
     public float waitDetectTime;
 
-    [Header("GameRule")][Space(10)]
-    public int collectionIndex;
+    [Space(10)][Header("GameRule")]
+    public int cardGameEndPoint;
+    public int collectionCount;
+
+    public CardGameRuleSystem(int cardGameEndPointCount,int collectionIndex)
+    {
+        cardGameEndPoint = cardGameEndPointCount;
+        collectionCount = collectionIndex;
+    }
     private void Awake()
     {
         _cardRecordSyStem = GetComponent<CardRecordSyStem>();
@@ -44,7 +51,7 @@ public class CardGameRuleSystem : MonoBehaviour
 
     private void RuleMistakeAction()
     {
-        for (int cardIndex = 0; cardIndex < collectionIndex; cardIndex++)
+        for (int cardIndex = 0; cardIndex < collectionCount; cardIndex++)
         {
             _cardRecordSyStem.GetCard(cardIndex).CallCardFlip();
         }
@@ -84,19 +91,19 @@ public class CardGameRuleSystem : MonoBehaviour
     //確認收集量是否達到
     private bool CheckCollectionCount()
     {
-        return _cardRecordSyStem.GetRecordListCount() == collectionIndex;
+        return _cardRecordSyStem.GetRecordListCount() == collectionCount;
     }
     //確認翻的所有卡片是否相同
     private bool AllCardTypeDetect()
     {
         int forLoopMaxIndex;
-        if (collectionIndex <=2)
+        if (collectionCount <=2)
         {
             forLoopMaxIndex = 0;
         }
         else
         {
-            forLoopMaxIndex = collectionIndex - 2;
+            forLoopMaxIndex = collectionCount - 2;
         }
         
         for (int cardIndex = 0; cardIndex <= forLoopMaxIndex; cardIndex++)

@@ -7,13 +7,18 @@ using Sequence = DG.Tweening.Sequence;
 
 public class Card : MonoBehaviour
 {
+    [Header("CardType")]
     public ECardType cardType;
 
-    [SerializeField] private bool isFlip;
+    [Space(10)][Header("Flip")]
     [Min(1)] public float flipDuration;
+    [SerializeField] private bool isFlip;
+    
+    [Space(10)][Header("Collection")]
     [Min(1)] public float moveDuration;
     public bool isCollected;
     
+    [Space(10)][Header("Icon")]
     [SerializeField] private GameObject cardIcon;
     [SerializeField] private bool iconActive;
 
