@@ -235,7 +235,7 @@ MonoBehaviour:
   moveDuration: 1
   isCollected: 0
   cardIcon: {fileID: 3465668909648583934}
-  iconActive: 0
+  iconActive: 1
 --- !u!1 &7099849640224219144
 GameObject:
   m_ObjectHideFlags: 0

@@ -229,13 +229,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a140bbf629a9a4080828c602d46e07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardType: 7
+  cardType: 0
   flipDuration: 1
   isFlip: 1
   moveDuration: 1
   isCollected: 0
   cardIcon: {fileID: 3465668909648583934}
-  iconActive: 0
+  iconActive: 1
 --- !u!1 &7099849640224219144
 GameObject:
   m_ObjectHideFlags: 0

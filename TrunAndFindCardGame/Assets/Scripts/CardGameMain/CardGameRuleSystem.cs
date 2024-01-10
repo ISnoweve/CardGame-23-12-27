@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Net.Mime;
 using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CardRecordSyStem))]
 public class CardGameRuleSystem : MonoBehaviour
@@ -16,8 +18,11 @@ public class CardGameRuleSystem : MonoBehaviour
     public float waitDetectTime;
 
     [Space(10)][Header("GameRule")]
-    public int cardGameEndPoint;
     public int collectionCount;
+    public int cardGameEndCollectionCount;
+    public int cardGameEndPoint;
+    public Text gameText;
+    public Text gameEndText;
 
     public CardGameRuleSystem(int cardGameEndPointCount,int collectionIndex)
     {
@@ -47,6 +52,10 @@ public class CardGameRuleSystem : MonoBehaviour
             _cardRecordSyStem.GetCard(cardIndex).CardCollecting(collectionPlace);
         }
         _cardRecordSyStem.ClearRecordList();
+        
+        
+        cardGameEndCollectionCount++;
+        gameText.text = "CollectionCount:" + cardGameEndCollectionCount;
     }
 
     private void RuleMistakeAction()
@@ -71,7 +80,11 @@ public class CardGameRuleSystem : MonoBehaviour
         {
             RuleMistakeAction();
         }
-        
+
+        if (cardGameEndPoint == cardGameEndCollectionCount)
+        {
+            gameEndText.enabled = true;
+        }
         yield return new WaitForSeconds(waitDetectTime);
         SystemWorkingEvent.Trigger();
         yield return null;

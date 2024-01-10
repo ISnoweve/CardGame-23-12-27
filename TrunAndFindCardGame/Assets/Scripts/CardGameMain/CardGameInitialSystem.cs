@@ -28,7 +28,7 @@ public class CardGameInitialSystem : MonoBehaviour
     {
         InstantiatePoint();
         InstantiateCard();
-        InitialPlaying();
+        StartCoroutine(InitialPlaying());
     }
 
     private IEnumerator InitialCardPosition(List<GameObject> points,List<Card> cards)
@@ -43,10 +43,23 @@ public class CardGameInitialSystem : MonoBehaviour
         }
         yield return null;
     }
-
-    public void InitialPlaying()
+    private void InitialCardFlip(List<Card> cards)
     {
-        StartCoroutine(InitialCardPosition(allPoints,allCards));
+        for (int i = 0; i < cards.Count; i++)
+        {
+            Card card = cards[i];
+            card.CallCardFlip();
+        }
+    }
+
+    public IEnumerator InitialPlaying()
+    {
+        systemWorkingEvent.Trigger();
+        yield return StartCoroutine(InitialCardPosition(allPoints,allCards));
+        yield return new WaitForSeconds(2f);
+        InitialCardFlip(allCards);
+        yield return new WaitForSeconds(0.1f);
+        systemWorkingEvent.Trigger();
     }
 
     private void ShuffleCard<T>(List<T> list)
@@ -61,7 +74,7 @@ public class CardGameInitialSystem : MonoBehaviour
         for (int i = 0; i < cardtypesList.Count; i++)
         {
             GameObject cardvalue = soCard.cardDictionary[cardtypesList[i]];
-            Card card =Instantiate(cardvalue,cardSpawner.position,Quaternion.identity,cardParent.transform).GetComponent<Card>();
+            Card card =Instantiate(cardvalue,cardSpawner.position,cardvalue.transform.rotation,cardParent.transform).GetComponent<Card>();
             allCards.Add(card);
         }
         ShuffleCard(allCards);
