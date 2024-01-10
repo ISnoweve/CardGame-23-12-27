@@ -8,7 +8,7 @@ public class CardGameRuleSystem : MonoBehaviour
 {
     [Header("Event")]
     [SerializeField]private SOClickEvent clickEvent;
-    [SerializeField]private SOCardGameRuleWorkingEvent gameRuleWorkingEvent;
+    [SerializeField]private SOSystemWorkingEvent SystemWorkingEvent;
 
     [Space(10)][Header("Reference")]
     private CardRecordSyStem _cardRecordSyStem;
@@ -60,7 +60,7 @@ public class CardGameRuleSystem : MonoBehaviour
     
     IEnumerator RuleWorkMoment(Card card)
     {
-        gameRuleWorkingEvent.Trigger();
+        SystemWorkingEvent.Trigger();
         yield return new WaitForSeconds(card.flipDuration);
 
         if (AllCardTypeDetect())
@@ -73,7 +73,7 @@ public class CardGameRuleSystem : MonoBehaviour
         }
         
         yield return new WaitForSeconds(waitDetectTime);
-        gameRuleWorkingEvent.Trigger();
+        SystemWorkingEvent.Trigger();
         yield return null;
     }
 

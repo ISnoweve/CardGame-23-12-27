@@ -8,7 +8,7 @@ public class InputSystem : MonoBehaviour
     private ClickDetectSystem _clickDetectSystem;
     private RaycastHit2D hitObject;
 
-    [SerializeField] private SOCardGameRuleWorkingEvent gameRuleWorkingEvent;
+    [SerializeField] private SOSystemWorkingEvent systemWorkingEvent;
 
     [SerializeField] private bool canClickInput = true;
 
@@ -42,11 +42,11 @@ public class InputSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        gameRuleWorkingEvent.action += DetectClickInput;
+        systemWorkingEvent.action += DetectClickInput;
     }
 
     private void OnDisable()
     {
-        gameRuleWorkingEvent.action -= DetectClickInput;
+        systemWorkingEvent.action -= DetectClickInput;
     }
 }

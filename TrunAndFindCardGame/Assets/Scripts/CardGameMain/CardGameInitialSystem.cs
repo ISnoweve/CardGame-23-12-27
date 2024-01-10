@@ -1,104 +1,96 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = System.Random;
+using DG.Tweening;
 
 public class CardGameInitialSystem : MonoBehaviour
 {
-
-    [Header("reference variable")]
+    [Header("Event")] 
+    [SerializeField] private SOSystemWorkingEvent systemWorkingEvent;
+    [Header("Reference variable")]
+    [SerializeField] private Transform cardSpawner;
+    [SerializeField] private GameObject pointObject;
+    [SerializeField] private SOCard soCard;
+    [SerializeField] private Vector3 instantiateOffset;
     [SerializeField] private int rows;
     [SerializeField] private int cols;
-    [FormerlySerializedAs("collectionIndex")] [SerializeField] private int collectIndex;
-    //下面為生成所需
-    [SerializeField]private List<int> controlTypeList;
-    [SerializeField]private List<int> controlCardList;
-    [SerializeField]private List<ECardType> cardtype;
-    
-    [Space(10)] 
-    [SerializeField] private GameObject prefabsObject;
+    [SerializeField] private int collectIndex;
+    [SerializeField] private List<ECardType> cardtype;
+    private List<int> controlTypeList = new List<int>();
+
+    [Header("Object")][Space(5)] 
+    [SerializeField] private List<GameObject> allPoints;
     [SerializeField] private List<Card> allCards;
-    public Vector3 positionOffset;
 
     private void Start()
     {
+        InstantiatePoint();
         InstantiateCard();
-        InitialCardType();
+        InitialPlaying();
     }
 
-    private void InitialCardType()
+    private IEnumerator InitialCardPosition(List<GameObject> points,List<Card> cards)
     {
-        int cardTeamCount = allCards.Count / collectIndex;
-        int cardTypeCount = Enum.GetNames(typeof(ECardType)).Length;
-        
-        for (int round = 0; round < cardTeamCount; round++)
+        int allCount = rows * cols;
+        for (int i = 0; i < allCount; i++)
         {
-            int enumindex = GetRandomNumber(cardTypeCount);
-            int enumd = ControlRandomForType(enumindex);
-            for (int j = 0; j < collectIndex; j++)
-            {
-                int cardIndex = GetRandomNumber(allCards.Count);
-                int card = ControlRandomForCard(cardIndex);
-                
-                allCards[card].cardType = cardtype[enumd];
-            }
+            GameObject point = points[i];
+            Card card = cards[i];
+            card.InitialSetupPosition(point.transform);
+            yield return new WaitForSeconds(0.1f);
         }
+        yield return null;
     }
 
+    public void InitialPlaying()
+    {
+        StartCoroutine(InitialCardPosition(allPoints,allCards));
+    }
+
+    private void ShuffleCard<T>(List<T> list)
+    {
+        Random random = new Random();
+        allCards = allCards.OrderBy(x => random.Next()).ToList();
+    }
     private void InstantiateCard()
     {
-        for (int x = 0; x < rows; x++)
+        GameObject cardParent = GameObject.Find("AllOfCard");
+        List<ECardType> cardtypesList = InstantiateTypeList();
+        for (int i = 0; i < cardtypesList.Count; i++)
         {
-            for (int y = 0; y < cols; y++)
+            GameObject cardvalue = soCard.cardDictionary[cardtypesList[i]];
+            Card card =Instantiate(cardvalue,cardSpawner.position,Quaternion.identity,cardParent.transform).GetComponent<Card>();
+            allCards.Add(card);
+        }
+        ShuffleCard(allCards);
+    }
+    private List<ECardType> InstantiateTypeList()
+    {
+        List<ECardType> cardtypesList = new List<ECardType>();
+        for (int i = 0; i < allPoints.Count/collectIndex; i++)
+        {
+            int randomNumber = GetRandomNumber(cardtype.Count);
+            int cardtypeNumber =ControlRandomForType(randomNumber);
+            for (int j = 0; j < collectIndex; j++)
             {
-                Vector3 cardSpawnPosition = GetCardPosition(x,y);
-                
-                GameObject emptyCard = Instantiate(prefabsObject, cardSpawnPosition, Quaternion.identity);
-                Card card = emptyCard.GetComponent<Card>();
-                allCards.Add(card);
+                cardtypesList.Add(cardtype[cardtypeNumber]);
             }
         }
-    }
-
-    private Vector3 GetCardPosition(int x,int y)
-    {
-        
-        float spawnX = x*2 - rows / 2;
-        float spawnY = y*3 - cols / 2;
-
-        Vector3 originalSpawnPoint = new Vector3(spawnX, spawnY);
-
-        Vector3 modifySpawnPoint = originalSpawnPoint - positionOffset*2;
-
-        return modifySpawnPoint;
+        return cardtypesList;
     }
     private int ControlRandomForType(int index)
     {
-        if(controlTypeList.Count == 10)controlTypeList.Clear();
+        if(controlTypeList.Count == soCard.cardDictionary.Count)controlTypeList.Clear();
 
-        if(index > 9) index = 0;
+        if(index > soCard.cardDictionary.Count-1) index = 0;
 
         if(controlTypeList.Contains(index)) return ControlRandomForType(index + 1);
         
         controlTypeList.Add(index);
         return index;
     }
-    
-    private int ControlRandomForCard(int index)
-    {
-        if(controlCardList.Count == allCards.Count)controlCardList.Clear();
-
-        if(index > allCards.Count-1) index = 0;
-
-        if(controlCardList.Contains(index)) return ControlRandomForCard(index + 1);
-        
-        controlCardList.Add(index);
-        return index;
-    }
-
     private int GetRandomNumber(int index)
     {
         Random random = new Random();
@@ -106,5 +98,30 @@ public class CardGameInitialSystem : MonoBehaviour
         int randomNumber = random.Next(0, index);
         
         return randomNumber;
+    }
+    private void InstantiatePoint()
+    {
+        GameObject pointParent = GameObject.Find("AllOfPoints");
+        for (int x = 0; x < rows; x++)
+        {
+            for (int y = 0; y < cols; y++)
+            {
+                Vector3 cardSpawnPosition = GetPointPosition(x,y);
+                
+                GameObject temp = Instantiate(pointObject, cardSpawnPosition, Quaternion.identity,pointParent.transform);
+                allPoints.Add(temp);
+            }
+        }
+    }
+    private Vector3 GetPointPosition(int x,int y)
+    {
+        float spawnX = x*2 - (float)rows / 2;
+        float spawnY = y*3 - (float)cols / 2;
+
+        Vector3 originalSpawnPoint = new Vector3(spawnX, spawnY);
+
+        Vector3 modifySpawnPoint = originalSpawnPoint - instantiateOffset*2;
+
+        return modifySpawnPoint;
     }
 }

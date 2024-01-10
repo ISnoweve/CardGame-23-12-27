@@ -22,6 +22,10 @@ public class Card : MonoBehaviour
     [SerializeField] private GameObject cardIcon;
     [SerializeField] private bool iconActive;
 
+    public void InitialSetupPosition(Transform point)
+    {
+        transform.DOMove(point.position, moveDuration);
+    }
     public void CallCardFlip()
     {
         StartCoroutine(CardFlip());

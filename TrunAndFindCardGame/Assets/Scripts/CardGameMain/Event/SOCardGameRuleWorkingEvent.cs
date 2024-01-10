@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameRuleEvent",menuName = "ScriptObject/Event/GameRuleEvent")]
-public class SOCardGameRuleWorkingEvent : ScriptableObject
+public class SOSystemWorkingEvent : ScriptableObject
 {
     public event Action action;
 

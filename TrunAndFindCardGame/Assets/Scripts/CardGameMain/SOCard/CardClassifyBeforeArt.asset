@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38267206914e0504ea0b46c507eba73d, type: 3}
+  m_Name: CardClassifyBeforeArt
+  m_EditorClassIdentifier: 
+  cardDictionary:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 3477258653525891888, guid: 92e6291de724ee2469a687ca3c7c6834, type: 3}
+    - Key: 1
+      Value: {fileID: 6310774581391465586, guid: 80d3f95c3f6568444a2fd5919f436b83, type: 3}
+    - Key: 2
+      Value: {fileID: 3432235249107812655, guid: 6589d42fcba97244b8daf520de6b9c9e, type: 3}
+    - Key: 3
+      Value: {fileID: 1614476033355687029, guid: 7057dc75017e2074b8c5670ea80df33b, type: 3}
+    - Key: 4
+      Value: {fileID: 2403389421752574940, guid: 515593b07fd253a4dbc0b74a1a170b86, type: 3}
+    - Key: 5
+      Value: {fileID: 7582060352583573367, guid: d132a23fddba59441b10c8175c14dacb, type: 3}
+    - Key: 6
+      Value: {fileID: 5976434442745630845, guid: 5fad27ce9753172429ed261fb925bf3d, type: 3}
+    - Key: 7
+      Value: {fileID: 4108981961844299340, guid: f343b5f3eb139ee43829d14839b64a93, type: 3}
+    - Key: 8
+      Value: {fileID: 5731953149574669770, guid: 2c5031f65106fa348b4c213ecf5c303b, type: 3}
+    - Key: 9
+      Value: {fileID: 7559582405377265311, guid: 2fef663cb443dca43a2071d15b5cc319, type: 3}
